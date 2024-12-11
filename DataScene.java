@@ -61,12 +61,6 @@ return max;
     }
 
 
-    /**
-     * Retrieves the image file path for the mountain
-     */
-    private String getImageForMountain(int index) {
-   return index < mountainImages.length ? mountainImages[index] : "images/mountainImage.jpg";
-    }
 
     /**
      * Makes a message for the mountain based on its height
