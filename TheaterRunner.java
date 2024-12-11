@@ -16,7 +16,7 @@ public class TheaterRunner {
         /**
          * Create a DataScene object
          */
-        DataScene mountainScene = new DataScene(heightsInMeters, mountainNames, ranges, countries, colorsArray, mountainImages);
+        DataScene mountainScene = new DataScene(heightsInMeters, mountainNames, ranges, countries, colorsArray);
 
         // Display all mountain details sequentially
         mountainScene.showAllMountainDetails();

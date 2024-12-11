@@ -6,7 +6,6 @@ public class DataScene extends Scene {
   private String[] ranges;
     private String[] countries;
   private String[] textColors;
-    private String[] mountainImages;
 
     private double highestPeak;
 
@@ -19,7 +18,6 @@ public class DataScene extends Scene {
         this.ranges = ranges;
          this.countries = countries;
           this.textColors = colors;
-         this.mountainImages = images;
         calculateHighestPeak();
     }
 
@@ -56,8 +54,7 @@ return max;
      */
     private void showMountainDetails(int index) {
         String message = getMessage(index);
-     String image = getImageForMountain(index);
-  drawMountainDetails("Mountain Details", message, mountainNames[index], heightsInMeters[index], ranges[index], countries[index], image, "silver");
+  drawMountainDetails("Mountain Details", message, mountainNames[index], heightsInMeters[index], ranges[index], countries[index], "silver");
     }
 
 
@@ -108,7 +105,6 @@ return max;
      * Creates a scene for a specific mountain
      */
     private void createMountainScene(int index) {
-     String image = getImageForMountain(index);
-      drawMountainDetails("Mountain Details", getMessage(index), mountainNames[index], heightsInMeters[index], ranges[index], countries[index], image, "silver");
+      drawMountainDetails("Mountain Details", getMessage(index), mountainNames[index], heightsInMeters[index], ranges[index], countries[index], "silver");
     }
 }
