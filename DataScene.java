@@ -1,110 +1,99 @@
 import org.code.theater.*;
 
 public class DataScene extends Scene {
-  private double[] heightsInMeters;
-  private String[] mountainNames;
-  private String[] ranges;
+
+    // Arrays to store mountain data
+    private String[] names;
+    private String[] ranges;
     private String[] countries;
-  private String[] textColors;
+    private double[] heights_meters;
 
-    private double highestPeak;
+    // Array to store heights converted to feet
+    private double[] heights_feet;
+
+    // Colors and images for the visualization
+    private String[] colors = {"white", "yellow", "orange", "red"};
+    private String[] images = {"images-Everest.jpg", "images-K2.jpg", "images-Kangchenjunga.jpg", "images-Lhotse.jpg"};
 
     /**
-     * Constructor for initializing the DataScene object with the given data
+     * Constructor initializes the data arrays and converts heights to feet.
      */
-    public DataScene(double[] heightsInMeters, String[] mountainNames, String[] ranges, String[] countries, String[] colors, String[] images) {
-         this.heightsInMeters = heightsInMeters;
-        this.mountainNames = mountainNames;
-        this.ranges = ranges;
-         this.countries = countries;
-          this.textColors = colors;
-        calculateHighestPeak();
+    public DataScene() {
+        names = FileReader.toStringArray("mountainNames.txt");
+        ranges = FileReader.toStringArray("ranges.txt");
+        countries = FileReader.toStringArray("countries.txt");
+        heights_meters = FileReader.toDoubleArray("heightsInMeters.txt");
+
+        heights_feet = convertToFeet(heights_meters);
     }
 
     /**
-     * Calculates the highest peak in the dataset
+     * Main visualization method.
+     * Displays a random mountain with its details, plays background sound,
+     * and uses colors based on height.
      */
-    private void calculateHighestPeak() {
-      highestPeak = findMax(heightsInMeters);
-    }
+    public void drawScene() {
+        int shown = (int) (Math.random() * 4);
 
-    /**
-     * Displays all mountain details 
-     */
-    public void showAllMountainDetails() {
-    for (int i = 0; i < mountainNames.length; i++) {
-        showMountainDetails(i);
-        }
-    }
+        // Display the selected mountain's image
+        drawImage(images[shown], 0, 0, 450);
 
-      /**
-     * *Finds the maximum value
-     */
-    private double findMax(double[] array) {
-        double max = array[0];
-        for (double value : array) {
-            max = Math.max(max, value);
-        }
-       
-return max;
-    }
-
-    /**
-     * Displays details for each mountain
-     */
-    private void showMountainDetails(int index) {
-        String message = getMessage(index);
-  drawMountainDetails("Mountain Details", message, mountainNames[index], heightsInMeters[index], ranges[index], countries[index], "silver");
-    }
-
-
-
-    /**
-     * Makes a message for the mountain based on its height
-     */
-    private String getMessage(int index) {
-        if (heightsInMeters[index] == highestPeak) {
-      return "Highest peak!";
-        } else {
-      return "Impressive height!";
-        }
-    }
-
-    /**
-     * Create visual scenes
-     */
-    public void createScene() {
-        for (int i = 0; i < heightsInMeters.length; i++) {
-        createMountainScene(i);
-        }
-    }
-  
-    /**
-     * Draws detailed information about a mountain
-     */
-    private void drawMountainDetails(String title, String message, String name, double height, String range, String country, String image, String color) {
-        drawImage(image, 0, 0, 450);
-       setFillColor(color);
-        drawRectangle(0, 0, 410, 50);
+        // Draw a rectangle with color based on height
+        setFillColor(colorAlgorithm(heights_meters[shown]));
         drawRectangle(0, 300, 410, 110);
-    setTextColor("black");
-        setTextHeight(34);
-        drawText(title, 65, 40);
-       setTextHeight(25);
-        drawText(message, 20, 325);
-        setTextHeight(18);
-       drawText(name, 20, 350);
-        drawText("Height: " + Math.round(height) + " m", 20, 375);
-        drawText("Range: " + range, 20, 400);
-       drawText("Country: " + country, 20, 425);
-        playSound("chime.wav");
-      pause(2);
+
+        // Display mountain details
+        setTextColor("black");
+        setTextHeight(25);
+        drawText(names[shown], 80, 50);
+        drawText(ranges[shown], 25, 325);
+        drawText(countries[shown], 25, 360);
+        drawText("Height in Meters: " + heights_meters[shown], 50, 380);
+        drawText("Height in Feet: " + heights_feet[shown], 50, 400);
+
+        // Play random background sound
+        int[] music = generateRandomBackgoundSound();
+        for (int i = 0; i < music.length; i++) {
+            playNoteAndPause(music[i], 1);
+        }
     }
 
     /**
-     * Creates a scene for a specific mountain
+     * Converts heights from meters to feet.
+     * Multiplies each height by 3.28.
      */
-    private void createMountainScene(int index) {
-      drawMountainDetails("Mountain Details", getMessage(index), mountainNames[index], heightsInMeters[index], ranges[index], countries[index], "silver");
+    private double[] convertToFeet(double[] list) {
+        heights_feet = new double[names.length];
+        for (int i = 0; i < names.length; i++) {
+            heights_feet[i] = list[i] * 3.28;
+        }
+        return heights_feet;
+    }
+
+    /**
+     * Generates a random sound sequence.
+     * Returns an array of 10 random note frequencies.
+     */
+    private int[] generateRandomBackgoundSound() {
+        int[] track = new int[10];
+        for (int i = 0; i < 10; i++) {
+            track[i] = (int) (Math.random() * 30 + 50);
+        }
+        return track;
+    }
+
+    /**
+     * Determines the rectangle color based on the mountain's height.
+     */
+    private String colorAlgorithm(double height) {
+        if (height > 8800) {
+            return colors[0];
+        } else if ((height <= 8800) && (height > 8600)) {
+            return colors[1];
+        } else if ((height <= 8600) && (height > 8550)) {
+            return colors[2];
+        } else {
+            return colors[3];
+        }
     }
 }
